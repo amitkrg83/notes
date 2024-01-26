@@ -1,43 +1,9 @@
-Job Description
-We have an exciting and rewarding opportunity for you to take your software engineering career to the next level. 
+// Extract the values from the specified columns and convert them to decimal
+    bool interestIsZero = decimal.TryParse(row[interestColumn].ToString(), out decimal interestValue) && interestValue == 0;
+    bool principalPaymentIsZero = decimal.TryParse(row[principalPaymentColumn].ToString(), out decimal principalPaymentValue) && principalPaymentValue == 0;
 
- 
+    // Construct the string conditionally
+    string interestPart = interestIsZero ? "Interest" : $"Interest {interestValue}";
+    string principalPaymentPart = principalPaymentIsZero ? "Principal payment" : $"Principal payment {principalPaymentValue}";
 
-As a Software Engineer III at JPMorgan Chase within the Global Investment and Corporate Banking Team, you serve as a seasoned member of an agile team to design and deliver trusted market-leading technology products in a secure, stable, and scalable way. You are responsible for carrying out critical technology solutions across multiple technical areas within various business functions in support of the firm’s business objectives.
-
- 
-
-Job responsibilities
-
- 
-
-Executes software solutions, design, development, and technical troubleshooting with ability to think beyond routine or conventional approaches to build solutions or break down technical problems
-Creates secure and high-quality production code and maintains algorithms that run synchronously with appropriate systems
-Produces architecture and design artifacts for complex applications while being accountable for ensuring design constraints are met by software code development
-Gathers, analyzes, synthesizes, and develops visualizations and reporting from large, diverse data sets in service of continuous improvement of software applications and systems
-Proactively identifies hidden problems and patterns in data and uses these insights to drive improvements to coding hygiene and system architecture
-Contributes to software engineering communities of practice and events that explore new and emerging technologies
- 
-
-Required qualifications, capabilities, and skills
-
- 
-
-Formal training or certification on software engineering concepts and 3+ years applied experience
-Overall knowledge of the Software Development Life Cycle
-Hands-on practical experience in system design, application development, testing, and operational stability
-Proficient .Net core platform, and programming languages such as C#
-Proficiency with frontend programming languages such as React or Angular
-Demonstrated knowledge of Object Oriented Programming and Design Principles (OOP / OOD/ SOLID)
-Experience in building micro services
-Experience in developing, debugging, and maintaining code in a large corporate environment with one or more modern programming languages and database querying languages
-Solid understanding of agile methodologies such as Test Driven Development, CI/CD, Applicant Resiliency, and Security
-Demonstrated knowledge of software applications and technical processes within a technical discipline (e.g., cloud, artificial intelligence, machine learning, mobile, etc.)
-Experience in building Cloud Native apps such as AWS, Azure, GCP, Kubernetes, Docker, or Cloud Foundry
- 
-
-Preferred qualifications, capabilities, and skills
-
- 
-
-Familiarity with in one or more relational databases  (QL Server, Oracle, MySQL), or document databases (MongoDB, DynamoDB)
+    return $"{interestPart}_{principalPaymentPart}";
