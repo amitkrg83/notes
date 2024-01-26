@@ -1,9 +1,38 @@
-// Extract the values from the specified columns and convert them to decimal
-    bool interestIsZero = decimal.TryParse(row[interestColumn].ToString(), out decimal interestValue) && interestValue == 0;
-    bool principalPaymentIsZero = decimal.TryParse(row[principalPaymentColumn].ToString(), out decimal principalPaymentValue) && principalPaymentValue == 0;
+private static string ManipulateData(DataRow row, string interestColumn, string principalPaymentColumn)
+{
+    string combinedValue = string.Empty;
 
-    // Construct the string conditionally
-    string interestPart = interestIsZero ? "Interest" : $"Interest {interestValue}";
-    string principalPaymentPart = principalPaymentIsZero ? "Principal payment" : $"Principal payment {principalPaymentValue}";
+    // Extract and parse the values from the specified columns
+    bool interestParsed = decimal.TryParse(row[interestColumn].ToString(), out decimal interestValue);
+    bool principalPaymentParsed = decimal.TryParse(row[principalPaymentColumn].ToString(), out decimal principalPaymentValue);
 
-    return $"{interestPart}_{principalPaymentPart}";
+    // Construct the interest part
+    if (interestParsed && interestValue != 0)
+    {
+        combinedValue = $"Interest {interestValue}";
+    }
+    else if (interestParsed)
+    {
+        combinedValue = "Interest";
+    }
+
+    // Construct the principal payment part
+    if (principalPaymentParsed && principalPaymentValue != 0)
+    {
+        if (!string.IsNullOrEmpty(combinedValue))
+        {
+            combinedValue += "_"; // Add separator
+        }
+        combinedValue += $"Principal payment {principalPaymentValue}";
+    }
+    else if (principalPaymentParsed)
+    {
+        if (!string.IsNullOrEmpty(combinedValue))
+        {
+            combinedValue += "_"; // Add separator
+        }
+        combinedValue += "Principal payment";
+    }
+
+    return combinedValue;
+}
