@@ -1,38 +1,21 @@
-private static string ManipulateData(DataRow row, string interestColumn, string principalPaymentColumn)
-{
-    string combinedValue = string.Empty;
-
-    // Extract and parse the values from the specified columns
+// Extract and parse the values from the specified columns
     bool interestParsed = decimal.TryParse(row[interestColumn].ToString(), out decimal interestValue);
     bool principalPaymentParsed = decimal.TryParse(row[principalPaymentColumn].ToString(), out decimal principalPaymentValue);
 
-    // Construct the interest part
+    // Initialize parts of the string
+    string interestPart = "Interest";
+    string principalPaymentPart = "Principal payment";
+
+    // Update parts based on values
     if (interestParsed && interestValue != 0)
     {
-        combinedValue = $"Interest {interestValue}";
-    }
-    else if (interestParsed)
-    {
-        combinedValue = "Interest";
+        interestPart += $" {interestValue}";
     }
 
-    // Construct the principal payment part
     if (principalPaymentParsed && principalPaymentValue != 0)
     {
-        if (!string.IsNullOrEmpty(combinedValue))
-        {
-            combinedValue += "_"; // Add separator
-        }
-        combinedValue += $"Principal payment {principalPaymentValue}";
-    }
-    else if (principalPaymentParsed)
-    {
-        if (!string.IsNullOrEmpty(combinedValue))
-        {
-            combinedValue += "_"; // Add separator
-        }
-        combinedValue += "Principal payment";
+        principalPaymentPart += $" {principalPaymentValue}";
     }
 
-    return combinedValue;
-}
+    // Combine the parts
+    return $"{interestPart}_{principalPaymentPart}";
