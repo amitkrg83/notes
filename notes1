@@ -1,21 +1,6 @@
-// Extract and parse the values from the specified columns
-    bool interestParsed = decimal.TryParse(row[interestColumn].ToString(), out decimal interestValue);
-    bool principalPaymentParsed = decimal.TryParse(row[principalPaymentColumn].ToString(), out decimal principalPaymentValue);
-
-    // Initialize parts of the string
-    string interestPart = "Interest";
-    string principalPaymentPart = "Principal payment";
-
-    // Update parts based on values
-    if (interestParsed && interestValue != 0)
-    {
-        interestPart += $" {interestValue}";
-    }
-
-    if (principalPaymentParsed && principalPaymentValue != 0)
-    {
-        principalPaymentPart += $" {principalPaymentValue}";
-    }
-
-    // Combine the parts
-    return $"{interestPart}_{principalPaymentPart}";
+CASE 
+                WHEN s.interest = 0 AND s.payment = 0 THEN 'interest_payment'
+                WHEN s.interest = 0 THEN 'interest_payment ' + CAST(s.payment AS VARCHAR)
+                WHEN s.payment = 0 THEN 'interest ' + CAST(s.interest AS VARCHAR) + '_payment'
+                ELSE 'interest ' + CAST(s.interest AS VARCHAR) + '_payment ' + CAST(s.payment AS VARCHAR)
+            END,
