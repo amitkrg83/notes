@@ -1,6 +1,16 @@
-CASE 
-                WHEN s.interest = 0 AND s.payment = 0 THEN 'interest_payment'
-                WHEN s.interest = 0 THEN 'interest_payment ' + CAST(s.payment AS VARCHAR)
-                WHEN s.payment = 0 THEN 'interest ' + CAST(s.interest AS VARCHAR) + '_payment'
-                ELSE 'interest ' + CAST(s.interest AS VARCHAR) + '_payment ' + CAST(s.payment AS VARCHAR)
-            END,
+var sContent = txtFile.ReadToEnd();
+                    var CultureInfo = new CultureInfo("en-US");
+
+                    using (CsvReader csv = new CsvReader(new MemoryStream(UTF8Encoding.UTF8.GetBytes(sContent)), false, Encoding.UTF8))
+                    {
+                        csv.SupportsMultiline = false;
+                        csv.MissingFieldAction = MissingFieldAction.ReplaceByEmpty;
+                        csv.SkipEmptyLines = true;
+                        
+                        var records = csv.GetEnumerator();
+                        while (records.MoveNext())
+                        {
+                            var vals = records.Current;
+                            try
+                            {
+                    
