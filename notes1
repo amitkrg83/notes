@@ -1,16 +1,40 @@
-var sContent = txtFile.ReadToEnd();
-                    var CultureInfo = new CultureInfo("en-US");
+public class P : ProcessStep
+{
+    // Constant for the step name
+    private const string STEP_NAME = "bd";
+    
+    // Repository interface for general operations
+    IRepository _Repository;
+    
+    // Repository interface specifically for 'F' operations, marked as read-only
+    private readonly IFRepository _fRepository;
 
-                    using (CsvReader csv = new CsvReader(new MemoryStream(UTF8Encoding.UTF8.GetBytes(sContent)), false, Encoding.UTF8))
-                    {
-                        csv.SupportsMultiline = false;
-                        csv.MissingFieldAction = MissingFieldAction.ReplaceByEmpty;
-                        csv.SkipEmptyLines = true;
-                        
-                        var records = csv.GetEnumerator();
-                        while (records.MoveNext())
-                        {
-                            var vals = records.Current;
-                            try
-                            {
-                    
+    // Constructor for the class 'P', initializing repositories and the base class
+    public P(IProcessBase processRef, IIRepository iiRepository, IFRepository fRepository)
+        : base(processRef)
+    {
+        _Repository = iiRepository; // Assign the general repository
+        _fRepository = fRepository; // Assign the 'F' specific repository
+    }
+
+    // Property to expose the step name
+    public override string StepName => STEP_NAME;
+
+    // Execute method runs the process step for each item in the processSteps array
+    public override void Execute(int processLockId, ProcessStepStatus[] processSteps)
+    {
+        // Check if there are any steps to process
+        if (processSteps.Length > 0)
+        {
+            // Use parallel processing for each step, respecting the configured max degree of parallelism
+            Parallel.ForEach<ProcessStepStatus>(processSteps, new ParallelOptions { MaxDegreeOfParallelism = StepConfig.ThreadCount }, processStep =>
+            {
+                // Process each step
+                var step = processStep; // Temporary variable for readability
+                LogStart(step); // Log the start of processing
+                // Invoke the process method on the repository with parameters from the step
+                iiRepository.Process(step.Pceld, step.Putchid, step.Rode, int.Parse(step.ntity));
+                LogEnd(step); // Log the end of processing
+            });
+        }
+    }
