@@ -1,40 +1,57 @@
-public class P : ProcessStep
-{
-    // Constant for the step name
-    private const string STEP_NAME = "bd";
-    
-    // Repository interface for general operations
-    IRepository _Repository;
-    
-    // Repository interface specifically for 'F' operations, marked as read-only
-    private readonly IFRepository _fRepository;
+import React, { useState } from 'react';
 
-    // Constructor for the class 'P', initializing repositories and the base class
-    public P(IProcessBase processRef, IIRepository iiRepository, IFRepository fRepository)
-        : base(processRef)
-    {
-        _Repository = iiRepository; // Assign the general repository
-        _fRepository = fRepository; // Assign the 'F' specific repository
+function FileUploadWithValidation() {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [error, setError] = useState('');
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Reset previous errors
+      setError('');
+
+      // Validate file type
+      if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+        setError('Please select a CSV file.');
+        return;
+      }
+
+      // Optional: Validate file size (e.g., not larger than 5MB)
+      const maxFileSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxFileSize) {
+        setError('File size should not exceed 5MB.');
+        return;
+      }
+
+      // If validation passes, update state with the selected file
+      setSelectedFile(file);
+    }
+  };
+
+  const handleFileUpload = () => {
+    if (!selectedFile) {
+      alert('Please select a file first!');
+      return;
     }
 
-    // Property to expose the step name
-    public override string StepName => STEP_NAME;
+    // Here, implement the file upload logic to your backend or cloud storage
+    console.log('Uploading file:', selectedFile.name);
+    // Reset the selected file after upload
+    setSelectedFile(null);
+  };
 
-    // Execute method runs the process step for each item in the processSteps array
-    public override void Execute(int processLockId, ProcessStepStatus[] processSteps)
-    {
-        // Check if there are any steps to process
-        if (processSteps.Length > 0)
-        {
-            // Use parallel processing for each step, respecting the configured max degree of parallelism
-            Parallel.ForEach<ProcessStepStatus>(processSteps, new ParallelOptions { MaxDegreeOfParallelism = StepConfig.ThreadCount }, processStep =>
-            {
-                // Process each step
-                var step = processStep; // Temporary variable for readability
-                LogStart(step); // Log the start of processing
-                // Invoke the process method on the repository with parameters from the step
-                iiRepository.Process(step.Pceld, step.Putchid, step.Rode, int.Parse(step.ntity));
-                LogEnd(step); // Log the end of processing
-            });
-        }
-    }
+  return (
+    <div>
+      <input
+        type="file"
+        accept=".csv"
+        onChange={handleFileChange}
+      />
+      <button onClick={handleFileUpload}>Upload File</button>
+      {selectedFile && <p>File selected: {selectedFile.name}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </div>
+  );
+}
+
+export default FileUploadWithValidation;
