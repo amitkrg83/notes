@@ -42,3 +42,32 @@ Merge Release to Master/Main for Deployment: Follow your company's procedure for
 Additional Considerations
 Communicate with Your Team: Keep your team informed about the PRs you're creating and merging, especially when it involves critical branches like develop and release.
 Follow Project Guidelines: Adhere to your company's specific guidelines for naming conventions, review processes, and deployment procedures.
+
+
+DECLARE @SearchValue NVARCHAR(100) = 'xyz';
+DECLARE @TableName NVARCHAR(256), @ColumnName NVARCHAR(256), @SQL NVARCHAR(MAX) = '';
+
+DECLARE column_cursor CURSOR FOR
+SELECT TABLE_NAME, COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE DATA_TYPE IN ('char', 'varchar', 'nchar', 'nvarchar', 'text', 'ntext');
+
+OPEN column_cursor;
+FETCH NEXT FROM column_cursor INTO @TableName, @ColumnName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    SET @SQL += 'SELECT ''' + @TableName + ''' AS Table_Name, ''' + @ColumnName + ''' AS Column_Name FROM ' + @TableName + ' WHERE ' + @ColumnName + ' LIKE ''%' + @SearchValue + '%'' UNION ALL ';
+    FETCH NEXT FROM column_cursor INTO @TableName, @ColumnName;
+END;
+
+CLOSE column_cursor;
+DEALLOCATE column_cursor;
+
+-- Remove the last 'UNION ALL'
+IF LEN(@SQL) > 0
+    SET @SQL = LEFT(@SQL, LEN(@SQL) - 10);
+
+-- Execute the generated SQL
+EXEC sp_executesql @SQL;
+
