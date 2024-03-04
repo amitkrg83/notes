@@ -1,57 +1,44 @@
-import React, { useState } from 'react';
+o move code from a feature branch to a release branch in Bitbucket, following your company's workflow where new code is developed on a feature branch, merged into the develop branch through a pull request, and eventually merged into a release branch for production, you can follow these detailed steps:
 
-function FileUploadWithValidation() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [error, setError] = useState('');
+Step 1: Merge Feature Branch into Develop
+Push Your Feature Branch: Ensure your feature branch is up to date and pushed to the remote repository on Bitbucket.
+git push origin feature-branch-name
+Create a Pull Request (PR) to Develop:
+Go to your repository in Bitbucket.
+Click on Pull requests > Create pull request.
+Set the Source branch to your feature-branch-name and the Destination branch to develop.
+Fill in the PR details: title, description (what changes are being introduced, and why), and assign reviewers.
+Click Create pull request.
+Review and Merge the PR:
+Once the PR is reviewed and approved by your team, and all automated checks pass, click on Merge to merge the changes into the develop branch.
+Step 2: Prepare the Release Branch
+If the release branch for the upcoming production release does not already exist:
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Reset previous errors
-      setError('');
+Create the Release Branch from Develop:
+Optionally, pull the latest changes from develop to your local machine:
+git checkout develop
+git pull origin develop
+Create the release branch:
+git checkout -b release/x.y.z (replace x.y.z with your release version)
+git push origin release/x.y.z
+If the release branch already exists and you're adding more changes to it:
 
-      // Validate file type
-      if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
-        setError('Please select a CSV file.');
-        return;
-      }
+Ensure the Release Branch is Updated: Before merging new changes, make sure the release branch has the latest updates that are ready for production.
+Step 3: Merge Develop into Release (if applicable)
+If additional changes from develop need to be included in the release after the release branch has been created:
 
-      // Optional: Validate file size (e.g., not larger than 5MB)
-      const maxFileSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxFileSize) {
-        setError('File size should not exceed 5MB.');
-        return;
-      }
-
-      // If validation passes, update state with the selected file
-      setSelectedFile(file);
-    }
-  };
-
-  const handleFileUpload = () => {
-    if (!selectedFile) {
-      alert('Please select a file first!');
-      return;
-    }
-
-    // Here, implement the file upload logic to your backend or cloud storage
-    console.log('Uploading file:', selectedFile.name);
-    // Reset the selected file after upload
-    setSelectedFile(null);
-  };
-
-  return (
-    <div>
-      <input
-        type="file"
-        accept=".csv"
-        onChange={handleFileChange}
-      />
-      <button onClick={handleFileUpload}>Upload File</button>
-      {selectedFile && <p>File selected: {selectedFile.name}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
-  );
-}
-
-export default FileUploadWithValidation;
+Create a Pull Request from Develop to Release:
+Go to Pull requests > Create pull request in Bitbucket.
+Set the Source branch to develop and the Destination branch to your release/x.y.z branch.
+Fill in the PR details and assign reviewers.
+Click Create pull request.
+Review and Merge the PR:
+After review and once all checks pass, merge the PR into the release branch.
+Step 4: Final Testing and Fixes
+Test the Release Branch: Conduct final testing within the release branch. Make any required fixes directly in this branch.
+Merge Fixes Back to Develop: If fixes are made in the release branch, ensure they are also merged back into develop to keep the branches in sync.
+Step 5: Release
+Merge Release to Master/Main for Deployment: Follow your company's procedure for deploying the release, which may involve merging the release branch into master or main and tagging the release.
+Additional Considerations
+Communicate with Your Team: Keep your team informed about the PRs you're creating and merging, especially when it involves critical branches like develop and release.
+Follow Project Guidelines: Adhere to your company's specific guidelines for naming conventions, review processes, and deployment procedures.
