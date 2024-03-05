@@ -44,32 +44,28 @@ Communicate with Your Team: Keep your team informed about the PRs you're creatin
 Follow Project Guidelines: Adhere to your company's specific guidelines for naming conventions, review processes, and deployment procedures.
 
 
-DECLARE @SearchValue NVARCHAR(100) = 'abc';
-DECLARE @TableName NVARCHAR(256), @ColumnName NVARCHAR(256), @SQL NVARCHAR(MAX) = '';
-DECLARE @FinalSQL NVARCHAR(MAX) = 'SELECT DISTINCT TableName FROM (';
+Subject: UAT Release Status Update Request for [Feature Name]
 
-DECLARE column_cursor CURSOR FOR
-    SELECT QUOTENAME(TABLE_SCHEMA) + '.' + QUOTENAME(TABLE_NAME), QUOTENAME(COLUMN_NAME)
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE DATA_TYPE IN ('char', 'varchar', 'nchar', 'nvarchar', 'text', 'ntext');
+Dear [Ops Team/Individual's Name],
 
-OPEN column_cursor;
-FETCH NEXT FROM column_cursor INTO @TableName, @ColumnName;
+I hope you are doing well. As we progress through our development milestones, I am reaching out to gather an update on the UAT (User Acceptance Testing) release status for the [Feature Name], initially communicated for [Date/Time Frame]. This information is pivotal for us to align our next steps and ensure we meet our project deliverables efficiently.
 
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    SET @SQL = @SQL + 'SELECT ''' + @TableName + ''' AS TableName WHERE EXISTS (SELECT * FROM ' + @TableName + ' WHERE ' + @ColumnName + ' LIKE ''%' + @SearchValue + '%'') UNION ALL ';
-    FETCH NEXT FROM column_cursor INTO @TableName, @ColumnName;
-END;
+Could you kindly provide an update on the following aspects?
 
-CLOSE column_cursor;
-DEALLOCATE column_cursor;
+The current stage of the UAT release for [Feature Name].
+Any challenges or obstacles that have been encountered and the strategies being implemented to address them.
+The anticipated timeline for the completion of remaining tasks associated with this release.
+Confirmation of the successful execution of UAT, if it has already been completed.
+Your feedback is invaluable in assisting us to coordinate effectively with our team and manage stakeholder expectations accurately. Please let us know if additional support from our side can facilitate the process or if there are specific areas requiring immediate attention.
 
--- Remove the last 'UNION ALL'
-IF LEN(@SQL) > 0
-    SET @FinalSQL = @FinalSQL + LEFT(@SQL, LEN(@SQL) - 10) + ') AS Results';
+Moreover, if there are preferred methods or channels (such as project management tools, scheduled updates, etc.) for receiving future updates on this and subsequent releases, I would be grateful for your recommendations.
 
--- Execute the generated SQL
-EXEC sp_executesql @FinalSQL;
+Thank you very much for your cooperation and support in ensuring a seamless transition through the UAT phase. I am looking forward to your prompt update.
+
+Warm regards,
+
+[Your Name]
+[Your Position]
+[Your Contact Information]
 
 
