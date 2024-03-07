@@ -68,24 +68,45 @@ Warm regards,
 [Your Position]
 [Your Contact Information]
 
+using System;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var filePath = @"path\to\your\file.csv"; // Ensure this path points to your CSV file
+        var fileReader = new LargeFileReader();
+
+        string fileContents = await fileReader.ReadFileAsync(filePath);
+
+        // Assuming you want to print the contents to the console
+        Console.WriteLine(fileContents);
+
+        Console.WriteLine("File processing completed.");
+    }
+}
+
 
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 public class LargeFileReader
 {
-    public async Task ReadFileAsync(string filePath)
+    public async Task<string> ReadFileAsync(string filePath)
     {
+        StringBuilder sContent = new StringBuilder();
         using (var textFile = File.OpenText(filePath))
         {
             string line;
             while ((line = await textFile.ReadLineAsync()) != null)
             {
-                // Process the line
-                Console.WriteLine(line); // Example of processing
+                // Append each line to the StringBuilder
+                sContent.AppendLine(line);
             }
         }
+        return sContent.ToString();
     }
 }
-
