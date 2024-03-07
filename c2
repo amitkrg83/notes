@@ -1,0 +1,39 @@
+Parallel.ForEach<ProcessStepStatus>(messages, new ParallelOptions { MaxDegreeOfParallelism = StepConfig.ThreadCount }, message =>
+{
+    var dtData = new DataTable();
+
+    colList.Split(',').ToList().ForEach(c => dtData.Columns.Add(c.Trim()));
+
+    var eventId = message.LegalEntity;
+    var fileEvent = _fileWatchRepo.GetById(int.Parse(eventId));
+    var filePath = Path.Combine(fileEvent.FolderPath, fileEvent.EventName);
+    using (var txtFile = File.OpenText(filePath))
+    {
+        var sFirstColumn = "Lender ID";
+        var sHeaderLine = string.Empty;
+        List<string> linesAfterHeader = new List<string>();
+
+        // Flag to indicate whether the header has been found
+        bool foundHeader = false;
+
+        while (!txtFile.EndOfStream)
+        {
+            var line = txtFile.ReadLine();
+            
+            // Check if the header has been found; if so, start collecting lines
+            if (foundHeader)
+            {
+                linesAfterHeader.Add(line);
+            }
+            else if (line.StartsWith(sFirstColumn))
+            {
+                foundHeader = true; // Mark that the header is found and start collecting lines after this
+                // Optionally, add the header line itself if needed
+                // linesAfterHeader.Add(line);
+            }
+        }
+
+        // Join all collected lines into a single string
+        var sContent = string.Join(Environment.NewLine, linesAfterHeader);
+    }
+});
