@@ -1,2 +1,23 @@
-codeSnippet
+const string colList = @"Lender_ID, Lender_Name, Deal_Type, Deal_Identifier";
 
+            
+Parallel.ForEach<ProcessStepStatus>(messages, new ParallelOptions { MaxDegreeOfParallelism = StepConfig.ThreadCount }, message =>
+{
+	var dtData = new DataTable();
+   
+	colList.Split(',').ToList().ForEach(c => dtData.Columns.Add(c.Trim()));
+
+	var eventId = message.LegalEntity;
+	var fileEvent = _fileWatchRepo.GetById(int.Parse(eventId));
+	var txtFile = File.OpenText(Path.Combine(fileEvnt.FolderPath, fileEvnt.EventName));
+
+	var sFirstColumn = "Lender ID";
+	var sHeaderLine = string.Empty;
+
+	while (!txtFile.EndOfStream && !sHeaderLine.StartsWith(sFirstColumn))
+	{
+		sHeaderLine = txtFile.ReadLine();
+	}
+
+	var sContent = txtFile.ReadToEnd();
+}
