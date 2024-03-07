@@ -69,3 +69,23 @@ Warm regards,
 [Your Contact Information]
 
 
+using System;
+using System.IO;
+using System.Threading.Tasks;
+
+public class LargeFileReader
+{
+    public async Task ReadFileAsync(string filePath)
+    {
+        using (var textFile = File.OpenText(filePath))
+        {
+            string line;
+            while ((line = await textFile.ReadLineAsync()) != null)
+            {
+                // Process the line
+                Console.WriteLine(line); // Example of processing
+            }
+        }
+    }
+}
+
