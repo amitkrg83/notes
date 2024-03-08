@@ -37,3 +37,26 @@ Parallel.ForEach<ProcessStepStatus>(messages, new ParallelOptions { MaxDegreeOfP
         var sContent = string.Join(Environment.NewLine, linesAfterHeader);
     }
 });
+
+
+---------
+
+StringBuilder sContentBuilder = new StringBuilder();
+
+    // Assuming the header is important and marks the beginning of the data of interest
+    while (!txtFile.EndOfStream)
+    {
+        var line = txtFile.ReadLine();
+        if (sHeaderLine.StartsWith(sFirstColumn))
+        {
+            // Start appending from the line following the header
+            sContentBuilder.AppendLine(line);
+        }
+        else if (string.IsNullOrEmpty(sHeaderLine))
+        {
+            // This captures the header line
+            sHeaderLine = line;
+        }
+    }
+
+    var sContent = sContentBuilder.ToString();
