@@ -51,6 +51,32 @@ class Program
             }
         }
 
+
+private static string IngestCsvFileWithoutSpecificHeader(string filePath, string headerToSkip)
+        {
+            var sbContent = new StringBuilder();
+
+            using (var fileText = File.OpenText(filePath))
+            {
+                while (!fileText.EndOfStream)
+                {
+                    var line = fileText.ReadLine()?.Trim();
+
+                    // continuously skip the line if header matches.
+                    if (line.StartsWith(headerToSkip))
+                    {
+                        continue;
+                    }
+
+                    //Else add it to the content.
+                    sbContent.AppendLine(line);
+                }
+            }
+
+            return sbContent.ToString();
+        }
+    }
+
         return sbContent.ToString();
     }
 }
