@@ -80,3 +80,19 @@ private static string IngestCsvFileWithoutSpecificHeader(string filePath, string
         return sbContent.ToString();
     }
 }
+
+
+Subject: Project Development Timeline
+
+Dear [Recipient's Name],
+
+Please find below the updated project development timeline:
+
+Phase	Dates
+Analysis	March 26 - March 28
+Development	April 1 - April 5
+User Acceptance Testing (UAT)	May 8 - May 12
+Release Date	April 19 (Fallback: April 25)
+Let us know if you have any questions or need further details.
+
+Best regards,
