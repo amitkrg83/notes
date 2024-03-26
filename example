@@ -1,0 +1,42 @@
+public TserviceTr(ITServiceRepo iPoRepo)
+        {
+            _column1 = new List<string>() {
+                                                "h1",
+                                                "h2"                                            
+                                                 };
+            _column2 = new List<string>()
+                                                {
+                                                    "h1",
+                                                    "h2"
+                                                };
+        }
+
+
+private DataTable GetIDtable()
+        {
+            DataTable dt = new DataTable();
+            foreach (var item in _column2)
+            {
+                dt.Columns.Add(item);
+            }
+            return dt;
+        }
+
+        public DataTable GetIReq(IEnumerable<IPReq> extractMessage)
+        {
+
+            var dt = GetIDtable();
+            var iExt = extractMessage;
+
+            foreach (var item in iExt)
+            {
+                var dr = dt.NewRow();
+                var posRequest = item;
+
+                dr["h1"] = posRequest.h1;
+                dr["h2"] = posRequest.h2;
+                
+                dt.Rows.Add(dr);
+            }
+            return dt;
+        }
